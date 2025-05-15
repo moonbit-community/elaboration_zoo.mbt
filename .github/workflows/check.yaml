@@ -1,0 +1,162 @@
+name: check
+
+on:
+  schedule:
+    # Runs at 02:30, only on Friday.
+    # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule
+    - cron: "30 2 * * 5"
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  check:
+    strategy:
+      matrix:
+        version: [stable,pre-release,bleeding]
+        os:
+          - name: ubuntu-latest
+            triple: x86_64-linux-gnu
+          - name: macos-latest
+            triple: arm64-apple-darwin
+          - name: macos-13
+            triple: x86_64-apple-darwin
+          - name: windows-latest
+            triple: x86_64-w64-mingw32
+
+          # stable check
+
+          # pre-release check
+
+          # bleeding check
+          # 1. install latest toolchain
+          # 2. install latest core library from github.com
+          
+      fail-fast: false
+    runs-on: ${{ matrix.os.name }}
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: set moonbit install version
+        if: ${{ matrix.version != 'stable' }}
+        run: |
+          echo "MOONBIT_INSTALL_VERSION=${{ matrix.version }}" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Set Github Action Global Variable
+        id: global
+        run: |
+          node .ci/set_global.mjs
+
+      - name: cache moonbit toolchain
+        id: cache-moonbit-toolchain
+        uses: actions/cache@v4
+        with: 
+          path: "${{ steps.global.outputs.home }}/.moon"
+          key: "${{ matrix.os.name }}-${{ matrix.version }}-${{ steps.global.outputs.key }}"
+
+      - name: install moonbit toolchain
+        if: ${{ steps.cache-moonbit-toolchain.outputs.cache-hit != 'true' }}
+        run: |
+          node .ci/setup_moon.mjs
+      
+      - name: add moonbit path
+        run: |
+          node .ci/add_moon_path.mjs
+
+      - name: moon version
+        run: |
+          moon version --all
+
+      - name: install module dependencies
+        run: |
+          moon update
+          moon install
+
+      - name: moon check
+        run: moon check --deny-warn
+
+      - name: moon info
+        run: |
+          moon info --target wasm,wasm-gc,js,native
+          git diff --exit-code
+
+      - name: format diff
+        run: |
+          moon fmt
+          git diff --exit-code
+
+      - name: Setup MSVC
+        if: ${{ matrix.os.name == 'windows-latest' }}
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Set ulimit on unix
+        if: ${{ matrix.os.name != 'windows-latest' }}
+        run: |
+          ulimit -s 8176
+
+      - name: moon test
+        run: |
+          moon test --target all,native
+          moon test --target all,native --release
+
+      - name: moon test with dedup_wasm
+        if: ${{ matrix.os.name != 'windows-latest' }}
+        env:
+          MOONC_INTERNAL_PARAMS: dedup_wasm = 1 |
+
+        run: |
+          moon clean
+          ulimit -s 8176
+          moon test --target wasm,wasm-gc
+          moon test --target wasm,wasm-gc --release
+
+      - name: moon test --doc
+        run: |
+          moon test --doc
+
+  moon-json-format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: check `moon.*.json` format
+        shell: bash
+        run: |
+          _passed=0;
+          for f in $(find . -type f -name "moon.*.json"); do
+            if ! jq '.' $f > /dev/null; then
+              echo $f;
+              _passed=1;
+            fi
+          done
+          (exit $_passed)
+
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: |
+          npm install --global prettier;
+          find . -name *.mod.json -exec npx prettier --write {} \;
+          find . -name *.pkg.json -exec npx prettier --write {} \;
+          git diff --exit-code;
+
+  check-typos:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: AutoCorrect
+        uses: huacnlee/autocorrect-action@v2
+
+      - name: typos-action
+        uses: crate-ci/typos@v1.31.1
