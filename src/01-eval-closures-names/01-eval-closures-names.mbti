@@ -1,0 +1,15 @@
+package "illusory0x0/elaboration_zoo/01-eval-closures-names"
+
+// Values
+
+// Types and methods
+type Closure
+
+type Tm
+
+type Val
+
+// Type aliases
+
+// Traits
+

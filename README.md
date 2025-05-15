@@ -1,29 +1,17 @@
-# Moonbit Github Workflows
+# illusory0x0/elaboration_zoo
 
-This CI configuration was modified from [moonbitlang/core CI](https://github.com/moonbitlang/core/blob/main/.github/workflows/check.yml)
-
-## Usage
-
-Change the `master` branch to your own
-
-```yaml
-## .github\workflows\check.yaml
-name: check
-
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-```
-
-## Modified
-
-### remove 
-
-* moon bundle
-* coverage-check
-* license-header-check
+本项目是将 [AndrasKovacs/elaboration-zoo](https://github.com/AndrasKovacs/elaboration-zoo) 从 Haskell 移植到 MoonBit 的实现示例。
 
 
+## Recommended Reading
 
+
+https://github.com/AndrasKovacs/elaboration-zoo
+
+https://carloangiuli.com/papers/type-theory-book.pdf 
+
+https://softwarefoundations.cis.upenn.edu/
+
+https://plfa.github.io/20.07/
+
+https://github.com/pku-dppl/TAPL-in-MoonBit

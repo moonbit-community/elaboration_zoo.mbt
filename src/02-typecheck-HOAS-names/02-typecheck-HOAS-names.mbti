@@ -1,0 +1,16 @@
+package "illusory0x0/elaboration_zoo/02-typecheck-HOAS-names"
+
+// Values
+
+// Types and methods
+type Tm
+
+type TypeError
+impl Show for TypeError
+
+type Val
+
+// Type aliases
+
+// Traits
+
