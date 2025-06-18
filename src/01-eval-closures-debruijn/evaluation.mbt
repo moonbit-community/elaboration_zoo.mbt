@@ -49,6 +49,10 @@ fn quote(val : Val, len : Int) -> Tm {
 /// 这里使用 `De Bruijn index`, 对 env 进行 cons 后， 需要对 term 里面的值 +1, 才不会违反性质，
 /// 这个操作也称为 `shift`。
 /// 
+/// 这里简单介绍一下 shift
+/// 
+/// https://github.com/illusory0x0/elaboration_zoo.mbt/blob/master/dbi-shift.md
+/// 
 /// eval(Var(0),[(y,0)])        [x |-> y](x)
 /// 
 /// eval(Var(1),[(z,1),(y,0)])  [x |-> y](x)
