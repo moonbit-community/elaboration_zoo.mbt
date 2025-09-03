@@ -31,16 +31,16 @@ enum Val {
 }
 
 ///|
-typealias @list.T as List
+typealias @moonbitlang/core/list.List
 
 ///|
-typealias List[(Name, Val)] as Env
+typealias @list.List[(Name, Val)] as Env
 
 ///|
 typealias Val as VTy
 
 ///|
-typealias List[(Name, VTy)] as Ctx
+typealias @list.List[(Name, VTy)] as Ctx
 
 ///|
 fnalias @list.(construct as cons, empty as nil)

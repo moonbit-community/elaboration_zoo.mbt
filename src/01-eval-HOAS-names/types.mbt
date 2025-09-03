@@ -2,7 +2,7 @@
 typealias String as Name
 
 ///|
-typealias @list.T as List
+typealias @moonbitlang/core/list.List
 
 ///|
 fnalias @list.(construct as cons, empty as nil)
@@ -21,7 +21,7 @@ enum Tm {
 }
 
 ///|
-typealias List[(Name, Val)] as Env
+typealias @list.List[(Name, Val)] as Env
 
 ///|
 enum Val {

@@ -1,5 +1,5 @@
 ///|
-typealias @list.T as List
+typealias @list.List
 
 ///|
 fnalias @list.(construct as cons, empty as nil)
@@ -36,10 +36,10 @@ enum Tm {
 }
 
 ///|
-typealias List[Val] as Spine
+typealias @list.List[Val] as Spine
 
 ///|
-typealias List[Val] as Env
+typealias @list.List[Val] as Env
 
 ///|
 enum Closure {
@@ -62,14 +62,14 @@ enum Val {
 typealias Val as VTy
 
 ///|
-typealias List[(String, VTy)] as Types
+typealias @moonbitlang/core/list.List[(String, VTy)] as Types
 
 ///|
 struct Ctx {
   env : Env
   lvl : Lvl
   types : Types
-  bds : List[BD]
+  bds : @list.List[BD]
   pos : SourcePos
 }
 
