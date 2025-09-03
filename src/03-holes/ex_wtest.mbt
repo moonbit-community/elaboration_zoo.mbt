@@ -2,18 +2,19 @@
 test "id" {
   reset()
   let ex = parser.parse(
-    #| let id : (A : _) -> A -> A = 
-    #|    fun A x -> x; 
-    #| id 
-    ,
+    (
+      #| let id : (A : _) -> A -> A = 
+      #|    fun A x -> x; 
+      #| id 
+    ),
   )
   let (tm, ty) = infer(ex, ctx=emptyCtx)
   inspect(
     tm,
-    content=
+    content=(
       #|let id : (A : U) -> (A) -> A = fun A x -> x;
       #|id
-    ,
+    ),
   )
   inspect(ty, content="(A : U) -> (A) -> A")
 }
@@ -23,20 +24,21 @@ test "combinator" {
   reset()
   let ctx = Default::default()
   let ex0 = parser.parse(
-    #| let id : (A : U) -> A -> A = 
-    #|    fun A -> fun x -> x;
-    #| let const : (A : U) -> (B : U) -> A -> B -> A = 
-    #|    fun A -> fun B -> fun x -> fun y -> x;
-    #| id ((A : U) -> (B : U) -> A -> B -> A) const 
-    ,
+    (
+      #| let id : (A : U) -> A -> A = 
+      #|    fun A -> fun x -> x;
+      #| let const : (A : U) -> (B : U) -> A -> B -> A = 
+      #|    fun A -> fun B -> fun x -> fun y -> x;
+      #| id ((A : U) -> (B : U) -> A -> B -> A) const 
+    ),
   )
   inspect(
     ex0,
-    content=
+    content=(
       #|let id : (A : U) -> (A) -> A = fun A x -> x;
       #|let const : (A : U) -> (B : U) -> (A) -> (B) -> A = fun A B x y -> x;
       #|((id (A : U) -> (B : U) -> (A) -> (B) -> A) const)
-    ,
+    ),
   )
   let (tm, ty) = infer(ex0, ctx~)
   inspect(nf(tm, nil()), content="fun A B x y -> x")
@@ -48,23 +50,24 @@ test "Nat" {
   reset()
   let ctx = Default::default()
   let ex1 = parser.parse(
-    #| let Nat : U = (N : U) -> (N -> N) -> N -> N;
-    #| let add : Nat -> Nat -> Nat = fun m n N f x ->  m N f (n N f x);
-    #| let five : Nat = fun N f x-> f(f(f(f(f x))));
-    #| let ten : Nat= add five five;
-    #| ten
-    ,
+    (
+      #| let Nat : U = (N : U) -> (N -> N) -> N -> N;
+      #| let add : Nat -> Nat -> Nat = fun m n N f x ->  m N f (n N f x);
+      #| let five : Nat = fun N f x-> f(f(f(f(f x))));
+      #| let ten : Nat= add five five;
+      #| ten
+    ),
   )
   let (tm, ty) = infer(ex1, ctx~)
   inspect(
     tm,
-    content=
+    content=(
       #|let Nat : U = (N : U) -> ((N) -> N) -> (N) -> N;
       #|let add : (Nat) -> (Nat) -> Nat = fun m n N f x -> (((m N) f) (((n N) f) x));
       #|let five : Nat = fun N f x -> (f (f (f (f (f x)))));
       #|let ten : Nat = ((add five) five);
       #|ten
-    ,
+    ),
   )
   inspect(
     nf(tm, nil()),

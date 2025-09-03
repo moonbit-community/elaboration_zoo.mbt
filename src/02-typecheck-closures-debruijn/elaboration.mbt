@@ -53,19 +53,20 @@ fn check(raw : Raw, a : VTy, ctx~ : Ctx) -> Tm raise TypeError {
       if not(conv(ctx.lvl, tty, a)) {
         report(
           ctx.pos,
-          $| type mismatch 
-          $|
-          $| expected type:
-          $|
-          $| \{quote(a,ctx.lvl)}
-          $|
-          $|
-          $| inferred type:
-          $|
-          $| 
-          $| \{quote(tty,ctx.lvl)}
-          $| 
-          ,
+          (
+            $| type mismatch 
+            $|
+            $| expected type:
+            $|
+            $| \{quote(a,ctx.lvl)}
+            $|
+            $|
+            $| inferred type:
+            $|
+            $| 
+            $| \{quote(tty,ctx.lvl)}
+            $| 
+          ),
         )
       }
       t
@@ -100,10 +101,11 @@ fn infer(raw : Raw, ctx~ : Ctx) -> (Tm, VTy) raise TypeError {
         tty =>
           report(
             ctx.pos,
-            $| Expected a function type, instead inferred:
-            $|
-            $| \{quote(tty,ctx.lvl)}
-            ,
+            (
+              $| Expected a function type, instead inferred:
+              $|
+              $| \{quote(tty,ctx.lvl)}
+            ),
           )
       }
     }

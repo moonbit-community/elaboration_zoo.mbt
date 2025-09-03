@@ -136,27 +136,29 @@ test "ex1" {
   let nil : Env = nil()
   let five = parser.parse("fun f -> fun x -> f(f(f(f(f x))))")
   let add = parser.parse(
-    #| fun m -> 
-    #|   fun n -> 
-    #|     fun f -> 
-    #|       fun x -> 
-    #|         m f (n f x)
-    ,
+    (
+      #| fun m -> 
+      #|   fun n -> 
+      #|     fun f -> 
+      #|       fun x -> 
+      #|         m f (n f x)
+    ),
   )
   let mul = parser.parse("fun m -> fun n -> m (n f)")
   let succ = parser.parse("fun n -> fun f -> fun x -> f (n f x)")
   let zero = parser.parse("fun f -> fun x -> x")
   let one = parser.parse("fun f -> fun x -> f x")
   let ex = parser.parse(
-    #| let add = fun m -> 
-    #|             fun n -> 
-    #|               fun f -> 
-    #|                 fun x -> 
-    #|                   m f (n f x);
-    #| let five = fun f -> fun x -> f(f(f(f(f x))));
-    #| let ten = add five five;
-    #| ten
-    ,
+    (
+      #| let add = fun m -> 
+      #|             fun n -> 
+      #|               fun f -> 
+      #|                 fun x -> 
+      #|                   m f (n f x);
+      #| let five = fun f -> fun x -> f(f(f(f(f x))));
+      #| let ten = add five five;
+      #| ten
+    ),
   )
   inspect(
     nf(ex, nil),
