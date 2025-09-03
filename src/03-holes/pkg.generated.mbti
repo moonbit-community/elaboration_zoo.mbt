@@ -1,0 +1,50 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "illusory0x0/elaboration_zoo/03-holes"
+
+// Values
+
+// Errors
+type ElabError
+
+type Error_
+
+type UnifyError
+impl Show for UnifyError
+
+// Types and methods
+type BD
+impl Show for BD
+
+type Closure
+
+type Ctx
+
+type Ix
+impl Eq for Ix
+impl Show for Ix
+
+type Lvl
+impl Eq for Lvl
+impl Show for Lvl
+
+type MetaEntry
+impl Show for MetaEntry
+
+pub(all) struct MetaVar(Int)
+fn MetaVar::inner(Self) -> Int
+impl Eq for MetaVar
+impl Show for MetaVar
+
+type PartialRenaming
+impl Show for PartialRenaming
+
+type Raw
+
+type Tm
+
+type Val
+
+// Type aliases
+
+// Traits
+

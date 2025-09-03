@@ -1,0 +1,26 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "illusory0x0/elaboration_zoo/01-eval-closures-debruijn"
+
+// Values
+
+// Errors
+
+// Types and methods
+type Closure
+
+type Ix
+impl Eq for Ix
+impl Show for Ix
+
+type Lvl
+impl Eq for Lvl
+impl Show for Lvl
+
+type Tm
+
+type Val
+
+// Type aliases
+
+// Traits
+
