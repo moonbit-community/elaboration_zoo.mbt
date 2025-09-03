@@ -1,0 +1,18 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "illusory0x0/elaboration_zoo/02-typecheck-HOAS-names"
+
+// Values
+
+// Errors
+type TypeError
+impl Show for TypeError
+
+// Types and methods
+type Tm
+
+type Val
+
+// Type aliases
+
+// Traits
+
