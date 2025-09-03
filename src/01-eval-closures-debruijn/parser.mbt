@@ -120,15 +120,16 @@ test "parser" {
   inspect(
     parser.run(
       input(
-        #| let \0;
-        #| 0
-        #|
-        ,
+        (
+          #| let \0;
+          #| 0
+          #|
+        ),
       ),
     ),
-    content=
+    content=(
       #|let (λ 0);
       #|0
-    ,
+    ),
   )
 }

@@ -1,5 +1,5 @@
 ///|
-pub(all) type MetaVar Int derive(Show, Eq)
+pub(all) struct MetaVar(Int) derive(Show, Eq)
 
 ///|
 fn MetaVar::to_int(self : MetaVar) -> Int = "%identity"

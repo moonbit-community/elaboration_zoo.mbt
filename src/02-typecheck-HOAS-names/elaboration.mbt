@@ -30,19 +30,20 @@ fn check(t : Raw, a : VTy, env~ : Env, ctx~ : Ctx) -> Unit raise TypeError {
       let tty = infer(t, env~, ctx~)
       if not(conv(env, tty, a)) {
         report(
-          $| type mismatch 
-          $|
-          $| expected type:
-          $|
-          $| \{quote(a,env)}
-          $|
-          $|
-          $| inferred type:
-          $|
-          $| 
-          $| \{quote(tty,env)}
-          $| 
-          ,
+          (
+            $| type mismatch 
+            $|
+            $| expected type:
+            $|
+            $| \{quote(a,env)}
+            $|
+            $|
+            $| inferred type:
+            $|
+            $| 
+            $| \{quote(tty,env)}
+            $| 
+          ),
         )
       }
     }
@@ -148,9 +149,9 @@ test {
   inspect(try? check(id_tm, id_ty, env=nil, ctx=nil), content="Ok(())")
   inspect(
     try? check(id_tm, VU, env=nil, ctx=nil),
-    content=
+    content=(
       #|Err(TypeError("Can't infer type for lambda expression"))
-    ,
+    ),
   )
   //  \A B x _. x
   let const_tm = Lam("A", Lam("B", Lam("x", Lam("_", Var("x")))))

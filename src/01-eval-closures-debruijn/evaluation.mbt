@@ -158,11 +158,12 @@ test "ex2" {
   let zero = parser.parse("(λ (λ 0))")
   let one = parser.parse("(λ (λ (1 0)))")
   let ex = parser.parse(
-    #| let (λ (λ (λ (λ ((3 1) ((2 1) 0))))));
-    #| let (λ (λ (1 (1 (1 (1 (1 0)))))));
-    #| let 1 0 0;
-    #| 0
-    ,
+    (
+      #| let (λ (λ (λ (λ ((3 1) ((2 1) 0))))));
+      #| let (λ (λ (1 (1 (1 (1 (1 0)))))));
+      #| let 1 0 0;
+      #| 0
+    ),
   )
   inspect(
     nf(ex, nil),

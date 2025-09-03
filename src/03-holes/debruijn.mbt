@@ -1,5 +1,5 @@
 ///|
-type Ix Int derive(Show, Eq)
+struct Ix(Int) derive(Show, Eq)
 
 ///|
 impl Add for Ix with op_add(self, other) = "%i32_add"
@@ -11,7 +11,7 @@ impl Sub for Ix with op_sub(self, other) = "%i32_sub"
 fn Ix::to_int(self : Ix) -> Int = "%identity"
 
 ///|
-type Lvl Int derive(Show, Eq)
+struct Lvl(Int) derive(Show, Eq)
 
 ///|
 impl Add for Lvl with op_add(self, other) = "%i32_add"

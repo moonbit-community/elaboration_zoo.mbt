@@ -3,21 +3,22 @@ test "unify error" {
   reset()
   let ctx = Default::default()
   let ex = parser.parse(
-    #| let foo : U -> U ->  U = 
-    #|   fun x -> x;
-    #| U
-    ,
+    (
+      #| let foo : U -> U ->  U = 
+      #|   fun x -> x;
+      #| U
+    ),
   )
   inspect(
     ex,
-    content=
+    content=(
       #|let foo : (U) -> (U) -> U = fun x -> x;
       #|U
-    ,
+    ),
   )
   inspect(
     try? infer(ex, ctx~),
-    content=
+    content=(
       #|Err(
       #|  SourcePosition: 1:11
       #| env: [Ix(-1)]
@@ -27,7 +28,7 @@ test "unify error" {
       #|
       #| message: Can't unify (U) -> U and U
       #|)
-    ,
+    ),
   )
 }
 
@@ -35,14 +36,15 @@ test "unify error" {
 test "error report" {
   let ctx = Default::default()
   let ex = parser.parse(
-    #| let id : (A : U) -> A -> A = fun A x -> x;
-    #| let foo : U -> U = U; 
-    #| foo
-    ,
+    (
+      #| let id : (A : U) -> A -> A = fun A x -> x;
+      #| let foo : U -> U = U; 
+      #| foo
+    ),
   )
   inspect(
     try? infer(ex, ctx~),
-    content=
+    content=(
       #|Err(
       #|  SourcePosition: 1:19
       #| env: [fun A x -> x]
@@ -52,6 +54,6 @@ test "error report" {
       #|
       #| message: Can't unify (U) -> U and U
       #|)
-    ,
+    ),
   )
 }

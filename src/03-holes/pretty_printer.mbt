@@ -151,12 +151,13 @@ impl Show for Val with output(self, logger) {
 impl Show for Ctx with output(self, logger) {
   let { env, lvl, types, bds, pos } = self
   logger.write_string(
-    $| SourcePosition: \{pos.row}:\{pos.col}
-    $| env: \{env.rev().iter()}
-    $| types: \{types.rev().iter()}
-    $| lvl: \{lvl} 
-    $| bds: \{bds.rev().iter()}
-    ,
+    (
+      $| SourcePosition: \{pos.row}:\{pos.col}
+      $| env: \{env.rev().iter()}
+      $| types: \{types.rev().iter()}
+      $| lvl: \{lvl} 
+      $| bds: \{bds.rev().iter()}
+    ),
   )
 }
 
@@ -165,14 +166,16 @@ impl Show for ElabError with output(self, logger) {
   match self {
     NameNotInScope(x, ns) =>
       logger.write_string(
-        $| \{x} not in scope 
-        $| context: \{ns.rev().iter()}
-        ,
+        (
+          $| \{x} not in scope 
+          $| context: \{ns.rev().iter()}
+        ),
       )
     CantUnify(t, u) =>
       logger.write_string(
-        $|Can't unify \{t} and \{u}
-        ,
+        (
+          $|Can't unify \{t} and \{u}
+        ),
       )
   }
 }
@@ -181,11 +184,12 @@ impl Show for ElabError with output(self, logger) {
 impl Show for Error_ with output(self, logger) {
   let Error_(ctx, ee) = self
   logger.write_string(
-    $|
-    $| \{ctx}
-    $|
-    $| message: \{ee}
-    $|
-    ,
+    (
+      $|
+      $| \{ctx}
+      $|
+      $| message: \{ee}
+      $|
+    ),
   )
 }
