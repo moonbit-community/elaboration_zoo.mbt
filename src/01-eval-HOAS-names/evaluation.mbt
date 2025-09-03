@@ -1,5 +1,5 @@
 ///|
-fn fresh(ns : List[Name], x : Name) -> Name {
+fn fresh(ns : @list.List[Name], x : Name) -> Name {
   loop x {
     "_" => "_"
     _ as x if ns.contains(x) => continue x + "'"

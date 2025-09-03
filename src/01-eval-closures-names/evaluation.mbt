@@ -36,7 +36,7 @@ fn eval(tm : Tm, env : Env) -> Val {
 }
 
 ///|
-fn quote(v : Val, ns : List[Name]) -> Tm {
+fn quote(v : Val, ns : @list.List[Name]) -> Tm {
   match v {
     VApp(t, u) => App(quote(t, ns), quote(u, ns))
     VVar(x) => Var(x)

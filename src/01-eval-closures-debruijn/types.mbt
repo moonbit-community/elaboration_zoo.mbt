@@ -11,7 +11,7 @@ enum Tm {
 }
 
 ///|
-typealias @list.T as List
+typealias @moonbitlang/core/list.List
 
 ///|
 typealias List[Val] as Env
