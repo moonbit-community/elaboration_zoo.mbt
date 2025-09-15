@@ -1,6 +1,6 @@
 # illusory0x0/elaboration_zoo
 
-本项目是将 [AndrasKovacs/elaboration-zoo](https://github.com/AndrasKovacs/elaboration-zoo) 从 Haskell 移植到 MoonBit 的实现示例。
+This project is an implementation example of porting [AndrasKovacs/elaboration-zoo](https://github.com/AndrasKovacs/elaboration-zoo) from Haskell to MoonBit.
 
 
 ## Recommended Reading

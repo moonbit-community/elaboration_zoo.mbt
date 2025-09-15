@@ -2,7 +2,7 @@
 let next_meta : Ref[Int] = Ref::new(0)
 
 ///|
-/// meta context 是全局变量， 和 local context是不同的
+/// meta context is a global variable, different from local context
 let mctx : Ref[@immut/sorted_map.SortedMap[Int, MetaEntry]] = Ref::new(
   @immut/sorted_map.new(),
 )
@@ -50,7 +50,7 @@ fn quoteSp(len : Lvl, t : Tm, sp : Spine) -> Tm {
 ///|
 fn freshMeta(ctx : Ctx) -> Tm {
   let m = next_meta.val
-  next_meta.val = m + 1 // 这里会产生 UUID
+  next_meta.val = m + 1 // This generates a UUID
   mctx.val = mctx.val.add(m, Unsolved)
   InsertedMeta(MetaVar(m), ctx.bds)
 }
@@ -78,11 +78,11 @@ fn PartialRenaming::lift(self : PartialRenaming) -> PartialRenaming {
 ///
 /// https://github.com/AndrasKovacs/elaboration-zoo/blob/master/03-holes/Main.hs#L95-L99
 ///
-/// 简单来说
+/// Simply put
 /// 
-/// 1. `Spine` 里面都是 `VVar`
-/// 2. rhs 的所有的自由变量， 都出现在 `Spine`里面
-/// 3. 禁止自引用
+/// 1. All elements in `Spine` are `VVar`
+/// 2. All free variables in rhs appear in `Spine`
+/// 3. Self-reference is prohibited
 
 ///|
 fn invert(gamma : Lvl, sp : Spine) -> PartialRenaming raise {
@@ -158,8 +158,8 @@ fn lams(l : Lvl, t : Tm) -> Tm {
 }
 
 ///|
-/// 简单来说 solve 就是把 `?a x y w z ?= rhs` 变成 `?a ?= fun x y w z -> rhs` 的程序，
-/// 除此之外，需要满足上面的三个要求
+/// Simply put, solve is a program that transforms `?a x y w z ?= rhs` into `?a ?= fun x y w z -> rhs`,
+/// and additionally needs to satisfy the three requirements above
 /// 
 fn solve(gamma : Lvl, m : MetaVar, sp : Spine, rhs : Val) -> Unit raise {
   let pren = invert(gamma, sp)

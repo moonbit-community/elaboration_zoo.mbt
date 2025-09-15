@@ -14,7 +14,7 @@ fn freshCl(cl : Closure, ns : List[Name]) -> Name {
 }
 
 ///|
-/// 调用 `appCl` 是真正发生 subsitituion 的地方
+/// Calling `appCl` is where substitution actually happens
 fn appCl(cl : Closure, u : Val) -> Val {
   let Closure(x, env, t) = cl
   eval(t, @list.cons((x, u), env))
@@ -42,8 +42,8 @@ fn quote(v : Val, ns : @list.List[Name]) -> Tm {
     VVar(x) => Var(x)
     VLam(cl) => {
       // eta expansion
-      let x = freshCl(cl, ns) // 这里需要 `fresh renaming`, 避免把原本是自由变量(free variable)当成是束缚变量(bound variable)
-      // 使用 DBI 需要 `shift` 维护 DBI的性质， 这里需要 `fresh renaming`, 处理 CAS 都是很麻烦的事情
+      let x = freshCl(cl, ns) // `fresh renaming` is needed here to avoid treating free variables as bound variables
+      // Using DBI requires `shift` to maintain DBI properties, `fresh renaming` is needed here, handling CAS is troublesome
       // https://en.wikipedia.org/wiki/Lambda_calculus#Free_variables
       // https://en.wikipedia.org/wiki/Lambda_calculus#Capture-avoiding_substitutions
       let t = quote(appCl(cl, VVar(x)), ns.prepend(x))
