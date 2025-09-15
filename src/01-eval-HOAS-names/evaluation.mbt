@@ -19,9 +19,9 @@ fn vApp(t : Val, u : Val) -> Val {
 fn eval(tm : Tm, env : Env) -> Val {
   match tm {
     App(t, u) => vApp(eval(t, env), eval(u, env))
-    Lam(x, t) => VLam(x, u => eval(t, cons((x, u), env)))
+    Lam(x, t) => VLam(x, u => eval(t, env.prepend((x, u))))
     Var(x) => env.lookup(x).unwrap()
-    Let(x, t, u) => eval(u, cons((x, eval(t, env)), env))
+    Let(x, t, u) => eval(u, env.prepend((x, eval(t, env))))
     SrcPos(_, e) => eval(e, env)
   }
 }
@@ -34,7 +34,7 @@ fn quote(v : Val, ns : List[Name]) -> Tm {
     VLam(x, t) => {
       // eta expansion
       let x = fresh(ns, x)
-      let t = quote(t(VVar(x)), cons(x, ns))
+      let t = quote(t(VVar(x)), List::cons(x, ns))
       Lam(x, t)
     }
   }

@@ -129,8 +129,8 @@ fn infer(raw : Raw, ctx~ : Ctx) -> (Tm, VTy) raise TypeError {
 fn bind(x : Name, a : VTy, ctx : Ctx) -> Ctx {
   let { env, types, lvl, pos } = ctx
   Ctx::{
-    env: cons(VVar(lvl), env),
-    types: cons((x, a), types),
+    env: env.prepend(VVar(lvl)),
+    types: types.prepend((x, a)),
     lvl: lvl + 1,
     pos,
   }
@@ -139,7 +139,9 @@ fn bind(x : Name, a : VTy, ctx : Ctx) -> Ctx {
 ///|
 fn define_(x : Name, t : Val, a : VTy, ctx : Ctx) -> Ctx {
   let { env, types, lvl, pos } = ctx
-  Ctx::{ env: cons(t, env), types: cons((x, a), types), lvl: lvl + 1, pos }
+  let new_env = env.prepend(t)
+  let new_types = types.prepend((x, a))
+  Ctx::{ env: new_env, types: new_types, lvl: lvl + 1, pos }
 }
 
 ///|

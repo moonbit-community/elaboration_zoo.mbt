@@ -17,7 +17,7 @@ fn freshCl(cl : Closure, ns : List[Name]) -> Name {
 /// 调用 `appCl` 是真正发生 subsitituion 的地方
 fn appCl(cl : Closure, u : Val) -> Val {
   let Closure(x, env, t) = cl
-  eval(t, cons((x, u), env))
+  eval(t, @list.cons((x, u), env))
 }
 
 ///|
@@ -30,7 +30,7 @@ fn eval(tm : Tm, env : Env) -> Val {
       }
     Lam(x, t) => VLam(Closure(x, env, t))
     Var(x) => env.lookup(x).unwrap()
-    Let(x, t, u) => eval(u, cons((x, eval(t, env)), env))
+    Let(x, t, u) => eval(u, @list.from_array([(x, eval(t, env))]) + env)
     SrcPos(_, e) => eval(e, env)
   }
 }
@@ -46,7 +46,7 @@ fn quote(v : Val, ns : @list.List[Name]) -> Tm {
       // 使用 DBI 需要 `shift` 维护 DBI的性质， 这里需要 `fresh renaming`, 处理 CAS 都是很麻烦的事情
       // https://en.wikipedia.org/wiki/Lambda_calculus#Free_variables
       // https://en.wikipedia.org/wiki/Lambda_calculus#Capture-avoiding_substitutions
-      let t = quote(appCl(cl, VVar(x)), cons(x, ns))
+      let t = quote(appCl(cl, VVar(x)), ns.prepend(x))
       Lam(x, t)
     }
   }

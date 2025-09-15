@@ -1,7 +1,7 @@
 ///|
 fn appCl(cl : Closure, u : Val) -> Val {
   let Closure(env, t) = cl
-  eval(t, cons(u, env))
+  eval(t, env.prepend(u))
 }
 
 ///|
@@ -14,7 +14,7 @@ fn eval(tm : Tm, env : Env) -> Val {
       }
     Lam(t) => VLam(Closure(env, t))
     Var(x) => env.nth(x.to_int()).unwrap()
-    Let(t, u) => eval(u, cons(eval(t, env), env))
+    Let(t, u) => eval(u, env.prepend(eval(t, env)))
     SrcPos(_, e) => eval(e, env)
   }
 }

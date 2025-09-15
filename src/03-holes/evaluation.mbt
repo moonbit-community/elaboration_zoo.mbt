@@ -2,7 +2,7 @@
 fn eval(tm : Tm, env : Env) -> Val {
   match tm {
     Meta(m) => vMeta(m)
-    Let(_, _, t, u) => eval(u, cons(eval(t, env), env))
+    Let(_, _, t, u) => eval(u, env.prepend(eval(t, env)))
     Pi(x, a, b) => VPi(x, eval(a, env), Closure(env, b))
     U => VU
     App(t, u) => vApp(eval(t, env), eval(u, env))
@@ -32,15 +32,15 @@ fn nf(tm : Tm, env : Env) -> Tm {
 ///|
 fn appCl(cl : Closure, u : Val) -> Val {
   let Closure(env, t) = cl
-  eval(t, cons(u, env))
+  eval(t, @list.cons(u, env))
 }
 
 ///|
 fn vApp(val : Val, u : Val) -> Val {
   match val {
     VLam(_, t) => appCl(t, u)
-    VFlex(m, sp) => VFlex(m, cons(u, sp))
-    VRigid(x, sp) => VRigid(x, cons(u, sp))
+    VFlex(m, sp) => VFlex(m, sp.prepend(u))
+    VRigid(x, sp) => VRigid(x, sp.prepend(u))
     _ => abort("impossible")
   }
 }
