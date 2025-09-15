@@ -15,7 +15,7 @@ fn eval(tm : Tm, env : Env) -> Val {
   match tm {
     Pi(x, a, b) =>
       VPi(x, eval(a, env), fn(u) {
-        let env = cons((x, u), env)
+        let env = env.prepend((x, u))
         eval(b, env)
       })
     U => VU
@@ -29,13 +29,13 @@ fn eval(tm : Tm, env : Env) -> Val {
     }
     Lam(x, t) =>
       VLam(x, fn(u) {
-        let env = cons((x, u), env)
+        let env = env.prepend((x, u))
         eval(t, env)
       })
     Var(x) => env.lookup(x).unwrap()
     Let(x, _, t, u) => {
       let t = eval(t, env)
-      let env = cons((x, t), env)
+      let env = env.prepend((x, t))
       eval(u, env)
     }
     SrcPos(_, t) => eval(t, env)
@@ -53,7 +53,7 @@ fn quote(v : Val, env : Env) -> Tm {
     VVar(x) => Var(x)
     VLam(x, t) => {
       let x = fresh(env, x)
-      let env = cons((x, VVar(x)), env)
+      let env = env.prepend((x, VVar(x)))
       let t = quote(t(VVar(x)), env)
       Lam(x, t)
     }
@@ -62,7 +62,7 @@ fn quote(v : Val, env : Env) -> Tm {
       let x = fresh(env, x)
       let a = quote(a, env)
       let b = {
-        let env = cons((x, VVar(x)), env)
+        let env = env.prepend((x, VVar(x)))
         quote(b(VVar(x)), env)
       }
       Pi(x, a, b)

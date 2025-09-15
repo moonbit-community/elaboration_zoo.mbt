@@ -11,8 +11,8 @@ fn check(t : Raw, a : VTy, env~ : Env, ctx~ : Ctx) -> Unit raise TypeError {
   match (t, a) {
     (Lam(x, t), VPi(x_, a, b)) => {
       let x_ = fresh(env, x_)
-      let env = cons((x, VVar(x_)), env)
-      let ctx = cons((x, a), ctx)
+      let env = env.prepend((x, VVar(x_)))
+      let ctx = ctx.prepend((x, a))
       check(t, b(VVar(x_)), env~, ctx~)
     }
     (Let(x, a_, t_, u), _) => {
@@ -20,8 +20,8 @@ fn check(t : Raw, a : VTy, env~ : Env, ctx~ : Ctx) -> Unit raise TypeError {
       let a_ = eval(a_, env)
       check(t_, a_, env~, ctx~)
       let res = {
-        let env = cons((x, eval(t_, env)), env)
-        let ctx = cons((x, a_), ctx)
+        let env = env.prepend((x, eval(t_, env)))
+        let ctx = ctx.prepend((x, a_))
         check(u, a, env~, ctx~)
       }
       res
@@ -56,8 +56,8 @@ fn infer(t : Raw, env~ : Env, ctx~ : Ctx) -> VTy raise TypeError {
     Pi(x, a, b) => {
       check(a, VU, env~, ctx~)
       {
-        let env = cons((x, VVar(x)), env)
-        let ctx = cons((x, eval(a, env)), ctx)
+        let env = env.add((x, VVar(x)))
+        let ctx = ctx.add((x, eval(a, env)))
         check(b, VU, env~, ctx~)
       }
       VU
@@ -87,8 +87,8 @@ fn infer(t : Raw, env~ : Env, ctx~ : Ctx) -> VTy raise TypeError {
       let a = eval(a, env)
       check(t, a, env~, ctx~)
       let res = {
-        let env = cons((x, eval(t, env)), env)
-        let ctx = cons((x, a), ctx)
+        let env = env.add((x, eval(t, env)))
+        let ctx = ctx.add((x, a))
         infer(u, env~, ctx~)
       }
       res
@@ -105,7 +105,7 @@ fn conv(env : Env, t : Val, u : Val) -> Bool {
       let x = fresh(env, x)
       conv(env, a, a_) &&
       {
-        let env = cons((x, VVar(x)), env)
+        let env = List::cons((x, VVar(x)), env)
         let b = b(VVar(x))
         let b_ = b_(VVar(x))
         conv(env, b, b_)
@@ -113,7 +113,7 @@ fn conv(env : Env, t : Val, u : Val) -> Bool {
     }
     (VLam(x, t), VLam(x_, t_)) => {
       let x = fresh(env, x)
-      let env = cons((x, VVar(x)), env)
+      let env = List::cons((x, VVar(x)), env)
       let t = t(VVar(x))
       let t_ = t_(VVar(x))
       conv(env, t, t_)
@@ -121,14 +121,14 @@ fn conv(env : Env, t : Val, u : Val) -> Bool {
     // checking eta conversion for Lam
     (VLam(x, t), u) => {
       let x = fresh(env, x)
-      let env = cons((x, VVar(x)), env)
+      let env = List::cons((x, VVar(x)), env)
       let lhs = t(VVar(x))
       let rhs = VApp(u, VVar(x))
       conv(env, lhs, rhs)
     }
     (u, VLam(x, t)) => {
       let x = fresh(env, x)
-      let env = cons((x, VVar(x)), env)
+      let env = List::cons((x, VVar(x)), env)
       let lhs = t(VVar(x))
       let rhs = VApp(u, VVar(x))
       conv(env, lhs, rhs)

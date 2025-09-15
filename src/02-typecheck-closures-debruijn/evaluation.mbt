@@ -1,7 +1,7 @@
 ///|
 fn appCl(cl : Closure, u : Val) -> Val {
   let Closure(env, t) = cl
-  eval(t, cons(u, env))
+  eval(t, env.prepend(u))
 }
 
 ///|
@@ -16,7 +16,7 @@ fn eval(tm : Tm, env : Env) -> Val {
     Var(x) => env.nth(x.to_int()).unwrap()
     Let(_, _, t, u) => {
       let x = eval(t, env)
-      let env = cons(x, env)
+      let env = @list.of([x]).concat(env)
       eval(u, env)
     }
     U => VU

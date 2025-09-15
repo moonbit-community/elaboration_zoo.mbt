@@ -7,7 +7,7 @@ impl Show for Tm with output(self, logger) {
         dfs(a, ns)
         logger.write_string(")")
         logger.write_string(" -> ")
-        dfs(b, cons("_", ns))
+        dfs(b, @list.cons("_", ns))
       }
       Pi(x, a, b) => {
         logger.write_string("(")
@@ -16,7 +16,7 @@ impl Show for Tm with output(self, logger) {
         dfs(a, ns)
         logger.write_string(")")
         logger.write_string(" -> ")
-        dfs(b, cons(x, ns))
+        dfs(b, @list.cons(x, ns))
       }
       U => logger.write_string("U")
       App(t, u) => {
@@ -29,11 +29,11 @@ impl Show for Tm with output(self, logger) {
       Lam(x, t) => {
         logger.write_string("fun ")
         logger.write_string(x)
-        let (t, ns) = loop (t, cons(x, ns)) {
+        let (t, ns) = loop (t, @list.cons(x, ns)) {
           (Lam(x, t), ns) => {
             logger.write_string(" ")
             logger.write_string(x)
-            continue (t, cons(x, ns))
+            continue (t, @list.cons(x, ns))
           }
           end => end
         }
@@ -49,7 +49,7 @@ impl Show for Tm with output(self, logger) {
         logger.write_string(" = ")
         dfs(t, ns)
         logger.write_string(";\n")
-        dfs(u, cons(x, ns))
+        dfs(u, @list.cons(x, ns))
       }
       SrcPos(_, t) => logger.write_object(t)
     }

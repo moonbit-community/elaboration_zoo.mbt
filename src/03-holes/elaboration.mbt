@@ -3,7 +3,7 @@ let next_meta : Ref[Int] = Ref::new(0)
 
 ///|
 /// meta context 是全局变量， 和 local context是不同的
-let mctx : Ref[@immut/sorted_map.T[Int, MetaEntry]] = Ref::new(
+let mctx : Ref[@immut/sorted_map.SortedMap[Int, MetaEntry]] = Ref::new(
   @immut/sorted_map.new(),
 )
 
@@ -59,7 +59,7 @@ fn freshMeta(ctx : Ctx) -> Tm {
 struct PartialRenaming {
   dom : Lvl // Gamma
   cod : Lvl // Delta
-  ren : @immut/sorted_map.T[Int, Lvl]
+  ren : @immut/sorted_map.SortedMap[Int, Lvl]
   // mapping from Delta to Gamma
   // TODO use Array
 } derive(Show)
@@ -86,7 +86,7 @@ fn PartialRenaming::lift(self : PartialRenaming) -> PartialRenaming {
 
 ///|
 fn invert(gamma : Lvl, sp : Spine) -> PartialRenaming raise {
-  fn go(sp : Spine) -> (Lvl, @immut/sorted_map.T[Int, Lvl]) raise {
+  fn go(sp : Spine) -> (Lvl, @immut/sorted_map.SortedMap[Int, Lvl]) raise {
     match sp {
       Empty => (Lvl(0), @immut/sorted_map.new())
       More(t, tail=sp) => {
@@ -214,10 +214,10 @@ let emptyCtx : Ctx = Ctx::default()
 fn bind(ctx : Ctx, x : Name, a : VTy) -> Ctx {
   let { lvl, env, types, bds, pos } = ctx
   Ctx::{
-    env: cons(vVar(lvl), env),
+    env: env.add(vVar(lvl)),
     lvl: lvl + 1,
-    types: cons((x, a), types),
-    bds: cons(Bound, bds),
+    types: types.add((x, a)),
+    bds: bds.add(Bound),
     pos,
   }
 }
@@ -226,10 +226,10 @@ fn bind(ctx : Ctx, x : Name, a : VTy) -> Ctx {
 fn define_(ctx : Ctx, x : Name, t : Val, a : VTy) -> Ctx {
   let { lvl, env, types, bds, pos } = ctx
   Ctx::{
-    env: cons(t, env),
+    env: env.prepend(t),
     lvl: lvl + 1,
-    types: cons((x, a), types),
-    bds: cons(Defined, bds),
+    types: types.prepend((x, a)),
+    bds: bds.prepend(Defined),
     pos,
   }
 }
