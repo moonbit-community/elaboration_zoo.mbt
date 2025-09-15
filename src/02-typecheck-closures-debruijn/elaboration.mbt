@@ -1,9 +1,9 @@
 ///|
 fn conv(len : Lvl, t : Val, u : Val) -> Bool {
-  /// 看到有 `appCl(t,VVar(len))` 就需要意识到，这是用 eta expansion, 是对 `body` 进行 normalize 了。
-  /// 在依赖类型中， `Pi type` 也可以产生 `binder` 的，并不只有 `lambda expression` 才会有 `binder`。
+  /// When you see `appCl(t,VVar(len))`, you need to realize this is using eta expansion to normalize the `body`.
+  /// In dependent types, `Pi type` can also generate `binder`, not only `lambda expression` has `binder`.
   ///
-  /// 当然在 Haskell 开启 (RankNTypes)[https://wiki.haskell.org/Rank-N_types] 后，arrow type 也可以有 binder.
+  /// Of course, after enabling (RankNTypes)[https://wiki.haskell.org/Rank-N_types] in Haskell, arrow type can also have binder.
   ///
   /// https://gitlab.haskell.org/haskell/prime/-/wikis/RankNTypes
   /// https://downloads.haskell.org/ghc/latest/docs/users_guide/exts/rank_polymorphism.html#extension-RankNTypes
@@ -24,7 +24,7 @@ fn conv(len : Lvl, t : Val, u : Val) -> Bool {
 
 ///|
 /// 
-/// 双向类型检查的参考资料
+/// Reference materials for bidirectional type checking
 /// 
 /// https://dl.acm.org/doi/10.1145/3450952
 /// 
@@ -38,7 +38,7 @@ fn check(raw : Raw, a : VTy, ctx~ : Ctx) -> Tm raise TypeError {
     (RLam(x, t), VPi(x_, a, b)) =>
       Lam(x, check(t, appCl(b, VVar(ctx.lvl)), ctx=bind(x, a, ctx)))
     //                                           ^^^^
-    // 双向类型检查最重要的部分就是把 binder 的类型添加到 ctx 里面
+    // The most important part of bidirectional type checking is adding the binder's type to the ctx
     (RLet(x, a, t, u), a_) => {
       let a = check(a, VU, ctx~)
       let va = eval(a, ctx.env)

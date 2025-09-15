@@ -35,21 +35,21 @@ fn quote(val : Val, len : Int) -> Tm {
 
 /// De Bruijn index/De Bruijn level
 ///
-/// De Bruijn index 用 `List::nth` 来引用在 `env` 里面的值。
-/// De Bruijn level 用 `List::rev_nth` 来引用 `env` 里面的值， 这里实际先用 `Lvl::to_ix` 先转换成 `De Bruijn index` 再引用值。
+/// De Bruijn index uses `List::nth` to reference values in `env`.
+/// De Bruijn level uses `List::rev_nth` to reference values in `env`, actually first converting to `De Bruijn index` using `Lvl::to_ix` then referencing values.
 /// 
-/// 使用 De Bruijn index 可以很方便的把 `closed term` 嵌入任意表达式， 
-/// 这里 `closed term` 是指没有任何自由变量的表达式， e.g. `fun x -> x`。
+/// Using De Bruijn index makes it convenient to embed `closed term` into arbitrary expressions, 
+/// where `closed term` refers to expressions without any free variables, e.g. `fun x -> x`.
 /// 
-/// 使用 De Bruijn level 在使用 `cons` 往 `env` 添加值的时候，不需要改变 term 里面的值。
+/// Using De Bruijn level when adding values to `env` with `cons` doesn't require changing values in the term.
 /// 
 /// e.g: index 
-/// Warning: 这里用的是 Cons List, 而不是惯例的 Snoc List。
+/// Warning: This uses Cons List, not the conventional Snoc List.
 /// 
-/// 这里使用 `De Bruijn index`, 对 env 进行 cons 后， 需要对 term 里面的值 +1, 才不会违反性质，
-/// 这个操作也称为 `shift`。
+/// When using `De Bruijn index`, after cons-ing to env, you need to +1 to values in the term to not violate the property,
+/// this operation is also called `shift`.
 /// 
-/// 这里简单介绍一下 shift
+/// Here's a brief introduction to shift
 /// 
 /// https://github.com/illusory0x0/elaboration_zoo.mbt/blob/master/dbi-shift.md
 /// 
@@ -59,7 +59,7 @@ fn quote(val : Val, len : Int) -> Tm {
 /// 
 /// e.g: level
 /// 
-/// 这里 `VVar(0)` 永远引用， 从右边往左数的，索引为0的元素，不需要改变 term 里面的值，所以非常方便。
+/// Here `VVar(0)` always references the element with index 0 counting from right to left, no need to change values in the term, so it's very convenient.
 /// 
 /// eval(VVar(0),[(y,0)])        [x |-> y](x)
 /// 
