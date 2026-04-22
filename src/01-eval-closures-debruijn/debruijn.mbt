@@ -21,8 +21,8 @@ impl Sub for Lvl with sub(self, other) = "%i32_sub"
 
 ///|
 fn Lvl::to_ix(self : Lvl, len : Lvl) -> Ix {
-  let l = len.inner()
-  let x = self.inner()
+  let l = len.to_int()
+  let x = self.to_int()
   Ix(l - x - 1)
 }
 
