@@ -50,7 +50,7 @@ fn check(raw : Raw, a : VTy, ctx~ : Ctx) -> Tm raise TypeError {
     }
     _ => {
       let (t, tty) = infer(raw, ctx~)
-      if not(conv(ctx.lvl, tty, a)) {
+      if !conv(ctx.lvl, tty, a) {
         report(
           ctx.pos,
           (

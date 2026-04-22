@@ -5,6 +5,10 @@
       "alias": "list"
     },
     {
+      "path": "moonbitlang/core/string",
+      "alias": "string"
+    },
+    {
       "path": "illusory0x0/simple_parserc",
       "alias": "parserc"
     }

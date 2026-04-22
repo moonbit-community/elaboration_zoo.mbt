@@ -16,7 +16,7 @@ fn eval(tm : Tm, env : Env) -> Val {
     Var(x) => env.nth(x.to_int()).unwrap()
     Let(_, _, t, u) => {
       let x = eval(t, env)
-      let env = @list.of([x]).concat(env)
+      let env = @list.from_array([x]).concat(env)
       eval(u, env)
     }
     U => VU

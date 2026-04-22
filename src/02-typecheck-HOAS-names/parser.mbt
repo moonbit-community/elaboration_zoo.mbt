@@ -56,7 +56,7 @@ fn input(s : String) -> Input {
 }
 
 ///|
-let reserved_words : Set[String] = Set::of(["let", "fun", "U"])
+let reserved_words : Set[String] = Set::from_array(["let", "fun", "U"])
 
 ///|
 let parser : Parser[Tm] = {
@@ -71,15 +71,15 @@ let parser : Parser[Tm] = {
     .discard_spaces()
     .label("name")
   let univ = symbol("U").discard_left(pure(U))
-  let name : Parser[String] = fn(input) {
+  let name : Parser[String] = fn(input) raise ParseError {
     let { row, col, .. } = input
     let (x, rest) = name(input)
-    guard not(reserved_words.contains(x)) else {
+    guard !reserved_words.contains(x) else {
       raise ParseError::expect(row~, col~, "valid identifiers")
     }
     (x, rest)
   }
-  let var_ = name.map(Var(_))
+  let var_ = name.map(x => Var(x))
   letrec lam = fn(input : Input) -> (Tm, Input) raise ParseError {
     let parser = symbol("fun")
       .discard_left(
@@ -135,7 +135,7 @@ let parser : Parser[Tm] = {
   }
 
   (expr : Parser[Raw])
-  .map_srcpos(SrcPos(_, _))
+  .map_srcpos((pos, t) => SrcPos(pos, t))
   .discard_right(spaces)
   .discard_right(eof(' '))
 }

@@ -28,7 +28,7 @@ fn check(t : Raw, a : VTy, env~ : Env, ctx~ : Ctx) -> Unit raise TypeError {
     }
     _ => {
       let tty = infer(t, env~, ctx~)
-      if not(conv(env, tty, a)) {
+      if !conv(env, tty, a) {
         report(
           (
             $| type mismatch 

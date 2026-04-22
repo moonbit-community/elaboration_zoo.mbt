@@ -62,7 +62,7 @@ fn symbol(x : String) -> Parser[String] {
 }
 
 ///|
-let reserved_words : Set[String] = Set::of(["let", "fun"])
+let reserved_words : Set[String] = Set::from_array(["let", "fun"])
 
 ///|
 let parser : Parser[Tm] = {
@@ -75,15 +75,15 @@ let parser : Parser[Tm] = {
       res
     })
     .label("name")
-  let name : Parser[String] = fn(input) {
+  let name : Parser[String] = fn(input) raise ParseError {
     let { row, col, .. } = input
     let (x, rest) = name(input)
-    guard not(reserved_words.contains(x)) else {
+    guard !reserved_words.contains(x) else {
       raise ParseError::expect(row~, col~, "valid identifiers")
     }
     (x, rest)
   }
-  let var_ = name.map(Var(_))
+  let var_ = name.map(x => Var(x))
   letrec lam = fn(input : Input) -> (Tm, Input) raise ParseError {
     let fun = symbol("fun")
     let x = name.discard_spaces()
@@ -114,7 +114,7 @@ let parser : Parser[Tm] = {
     .discard_spaces()
     .foldl1(pure_pos(pos => (t, u) => App(t, u)))
     .label("expr")
-    .map_srcpos(SrcPos(_, _))(input)
+    .map_srcpos((pos, t) => SrcPos(pos, t))(input)
   }
 
   (expr : Parser[Tm]).discard_right(spaces).discard_right(eof(' '))
