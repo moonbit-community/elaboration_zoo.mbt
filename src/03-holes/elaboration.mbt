@@ -269,11 +269,13 @@ fn infer(t : Raw, ctx~ : Ctx) -> (Tm, Vty) raise {
   match t {
     RSrcPos(pos, t) => infer(t, ctx={ ..ctx, pos, })
     RVar(x) =>
-      loop (Ix(0), ctx.types) {
-        (Ix(idx), Empty) => raise NameNotInScope(x, ctx.types.map(x => x.0))
-        (Ix(idx), More((x_, a), tail=types)) => {
-          guard x != x_ else { (Var(idx), a) }
-          continue (Ix(idx + 1), types)
+      for ix = Ix(0), types = ctx.types {
+        match (ix, types) {
+          (Ix(idx), Empty) => raise NameNotInScope(x, ctx.types.map(x => x.0))
+          (Ix(idx), More((x_, a), tail=types)) => {
+            guard x != x_ else { break (Var(idx), a) }
+            continue Ix(idx + 1), types
+          }
         }
       }
     RLam(x, t) => {

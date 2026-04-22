@@ -29,13 +29,15 @@ impl Show for Tm with output(self, logger) {
       Lam(x, t) => {
         logger.write_string("fun ")
         logger.write_string(x)
-        let (t, ns) = loop (t, ns.prepend(x)) {
-          (SrcPos(_, Lam(x, t)), ns) | (Lam(x, t), ns) => {
-            logger.write_string(" ")
-            logger.write_string(x)
-            continue (t, ns.prepend(x))
+        let (t, ns) = for t = t, ns = ns.prepend(x) {
+          match t {
+            SrcPos(_, Lam(x, t)) | Lam(x, t) => {
+              logger.write_string(" ")
+              logger.write_string(x)
+              continue t, ns.prepend(x)
+            }
+            _ => break (t, ns)
           }
-          end => end
         }
         logger.write_string(" -> ")
         dfs(t, ns)
@@ -106,14 +108,16 @@ impl Show for Raw with output(self, logger) {
       RLam(x, t) => {
         logger.write_string("fun ")
         logger.write_string(x)
-        let t = loop t {
-          RLam(x, t) => {
-            logger.write_string(" ")
-            logger.write_string(x)
-            continue t
+        let t = for t = t {
+          match t {
+            RLam(x, t) => {
+              logger.write_string(" ")
+              logger.write_string(x)
+              continue t
+            }
+            RSrcPos(_, t) => continue t
+            _ => break t
           }
-          RSrcPos(_, t) => continue t
-          t => t
         }
         logger.write_string(" -> ")
         dfs(t)
