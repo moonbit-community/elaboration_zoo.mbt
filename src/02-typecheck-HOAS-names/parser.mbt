@@ -1,5 +1,10 @@
 ///|
-typealias @parserc.(Input, ParseError, Parser, SourcePos)
+using @parserc {
+  type Input,
+  type ParseError,
+  type Parser,
+  type SourcePos,
+}
 
 ///|
 let space = @parserc.space
@@ -17,7 +22,7 @@ let alphabetic = @parserc.alphabetic
 let spaces = @parserc.spaces
 
 ///|
-fnalias @parserc.(
+using @parserc {
   between,
   char,
   discard_left,
@@ -42,11 +47,13 @@ fnalias @parserc.(
   many,
   many_each,
   map_srcpos,
-  or
-)
+  or,
+}
 
 ///|
-fnalias Input::new as input
+fn input(s : String) -> Input {
+  Input::new(s)
+}
 
 ///|
 let reserved_words : Set[String] = Set::of(["let", "fun", "U"])

@@ -27,7 +27,9 @@ fn Lvl::to_ix(self : Lvl, len : Lvl) -> Ix {
 }
 
 ///|
-fnalias Lvl::to_ix as lvl_to_ix
+fn lvl_to_ix(lvl : Lvl, len : Lvl) -> Ix {
+  lvl.to_ix(len)
+}
 
 ///|
 fn Lvl::to_int(self : Lvl) -> Int = "%identity"

@@ -1,5 +1,7 @@
 ///|
-fnalias @list.construct as cons
+fn[A] cons(x : A, xs : List[A]) -> List[A] {
+  @list.cons(x, xs)
+}
 
 ///|
 enum Tm {
@@ -11,10 +13,10 @@ enum Tm {
 }
 
 ///|
-typealias @moonbitlang/core/list.List
+type List[A] = @list.List[A]
 
 ///|
-typealias List[Val] as Env
+type Env = List[Val]
 
 ///|
 enum Closure {

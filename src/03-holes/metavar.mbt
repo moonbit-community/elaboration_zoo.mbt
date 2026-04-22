@@ -8,4 +8,6 @@ fn MetaVar::to_int(self : MetaVar) -> Int = "%identity"
 fn MetaVar::new(x : Int) -> MetaVar = "%identity"
 
 ///|
-fnalias MetaVar::new as metavar
+fn metavar(i : Int) -> MetaVar {
+  MetaVar::new(i)
+}
