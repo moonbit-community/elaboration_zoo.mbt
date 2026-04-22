@@ -1,6 +1,10 @@
 {
   "import": [
     {
+      "path": "moonbitlang/core/list",
+      "alias": "list"
+    },
+    {
       "path": "illusory0x0/simple_parserc",
       "alias": "parserc"
     }
