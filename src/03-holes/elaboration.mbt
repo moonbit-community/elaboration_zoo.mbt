@@ -104,8 +104,7 @@ fn invert(gamma : Lvl, sp : Spine) -> PartialRenaming raise {
       More(t, tail=sp) => {
         let (dom, ren) = go(sp)
         match force(t) {
-          VRigid(Lvl(x), _) if !ren.contains(x) =>
-            (dom + 1, ren.add(x, dom))
+          VRigid(Lvl(x), _) if !ren.contains(x) => (dom + 1, ren.add(x, dom))
           _ => raise UnifyError("spine has non variables")
         }
       }

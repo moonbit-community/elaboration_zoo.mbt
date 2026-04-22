@@ -1,10 +1,5 @@
 ///|
-using @parserc {
-  type Input,
-  type ParseError,
-  type Parser,
-  type SourcePos,
-}
+using @parserc {type Input, type ParseError, type Parser, type SourcePos}
 
 ///|
 let space = @parserc.space
