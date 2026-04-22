@@ -81,7 +81,7 @@ suberror TypeError {
 }
 
 ///|
-impl Show for TypeError with output(self, logger) {
+pub impl Show for TypeError with output(self, logger) {
   let TypeError(pos, msg) = self
   logger.write_string("TypeError(")
   logger.write_object(pos)

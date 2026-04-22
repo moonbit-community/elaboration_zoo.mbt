@@ -11,7 +11,7 @@ impl Sub for Ix with sub(self, other) = "%i32_sub"
 fn Ix::to_int(self : Ix) -> Int = "%identity"
 
 ///|
-impl Show for Ix with output(self, logger) {
+pub impl Show for Ix with output(self, logger) {
   logger.write_string("Ix(")
   logger.write_object(self.to_int())
   logger.write_char(')')
@@ -42,7 +42,7 @@ fn lvl_to_ix(lvl : Lvl, len : Lvl) -> Ix {
 fn Lvl::to_int(self : Lvl) -> Int = "%identity"
 
 ///|
-impl Show for Lvl with output(self, logger) {
+pub impl Show for Lvl with output(self, logger) {
   logger.write_string("Lvl(")
   logger.write_object(self.to_int())
   logger.write_char(')')

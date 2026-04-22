@@ -65,7 +65,7 @@ struct PartialRenaming {
 }
 
 ///|
-impl Show for PartialRenaming with output(self, logger) {
+pub impl Show for PartialRenaming with output(self, logger) {
   let { dom, cod, ren } = self
   logger.write_string("{dom: ")
   logger.write_object(dom)

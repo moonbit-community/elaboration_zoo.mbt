@@ -18,7 +18,7 @@ enum MetaEntry {
 }
 
 ///|
-impl Show for MetaEntry with output(self, logger) {
+pub impl Show for MetaEntry with output(self, logger) {
   match self {
     Solved(v) => {
       logger.write_string("Solved(")
@@ -42,7 +42,7 @@ enum BD {
 }
 
 ///|
-impl Show for BD with output(self, logger) {
+pub impl Show for BD with output(self, logger) {
   match self {
     Bound => logger.write_string("Bound")
     Defined => logger.write_string("Defined")
@@ -106,7 +106,7 @@ suberror UnifyError {
 }
 
 ///|
-impl Show for UnifyError with output(self, logger) {
+pub impl Show for UnifyError with output(self, logger) {
   let UnifyError(msg) = self
   logger.write_string("UnifyError(")
   logger.write_object(msg)

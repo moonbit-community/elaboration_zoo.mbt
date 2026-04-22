@@ -5,7 +5,7 @@ pub(all) struct MetaVar(Int) derive(Eq)
 fn MetaVar::to_int(self : MetaVar) -> Int = "%identity"
 
 ///|
-impl Show for MetaVar with output(self, logger) {
+pub impl Show for MetaVar with output(self, logger) {
   logger.write_string("MetaVar(")
   logger.write_object(self.to_int())
   logger.write_char(')')
