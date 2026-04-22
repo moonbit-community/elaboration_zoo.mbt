@@ -62,7 +62,19 @@ struct PartialRenaming {
   ren : @immut/sorted_map.SortedMap[Int, Lvl]
   // mapping from Delta to Gamma
   // TODO use Array
-} derive(Show)
+}
+
+///|
+impl Show for PartialRenaming with output(self, logger) {
+  let { dom, cod, ren } = self
+  logger.write_string("{dom: ")
+  logger.write_object(dom)
+  logger.write_string(", cod: ")
+  logger.write_object(cod)
+  logger.write_string(", ren: ")
+  logger.write_object(ren)
+  logger.write_char('}')
+}
 
 ///|
 fn PartialRenaming::lift(self : PartialRenaming) -> PartialRenaming {

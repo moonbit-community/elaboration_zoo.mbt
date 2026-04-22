@@ -1,5 +1,15 @@
 ///|
-suberror TypeError String derive(Show)
+suberror TypeError {
+  TypeError(String)
+}
+
+///|
+impl Show for TypeError with output(self, logger) {
+  let TypeError(msg) = self
+  logger.write_string("TypeError(")
+  logger.write_object(msg)
+  logger.write_char(')')
+}
 
 ///|
 fn[A] report(x : String) -> A raise TypeError {

@@ -15,7 +15,19 @@ fn[A] cons(x : A, xs : List[A]) -> List[A] {
 enum MetaEntry {
   Solved(Val)
   Unsolved
-} derive(Show)
+}
+
+///|
+impl Show for MetaEntry with output(self, logger) {
+  match self {
+    Solved(v) => {
+      logger.write_string("Solved(")
+      logger.write_object(v)
+      logger.write_char(')')
+    }
+    Unsolved => logger.write_string("Unsolved")
+  }
+}
 
 ///|
 type Ty = Tm
@@ -27,7 +39,15 @@ type Name = String
 enum BD {
   Bound
   Defined
-} derive(Show)
+}
+
+///|
+impl Show for BD with output(self, logger) {
+  match self {
+    Bound => logger.write_string("Bound")
+    Defined => logger.write_string("Defined")
+  }
+}
 
 ///|
 enum Tm {
@@ -81,7 +101,17 @@ struct Ctx {
 }
 
 ///|
-suberror UnifyError String derive(Show)
+suberror UnifyError {
+  UnifyError(String)
+}
+
+///|
+impl Show for UnifyError with output(self, logger) {
+  let UnifyError(msg) = self
+  logger.write_string("UnifyError(")
+  logger.write_object(msg)
+  logger.write_char(')')
+}
 
 ///|
 suberror ElabError {

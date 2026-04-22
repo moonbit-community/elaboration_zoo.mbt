@@ -78,7 +78,17 @@ struct Ctx {
 ///|
 suberror TypeError {
   TypeError(SourcePos, String)
-} derive(Show)
+}
+
+///|
+impl Show for TypeError with output(self, logger) {
+  let TypeError(pos, msg) = self
+  logger.write_string("TypeError(")
+  logger.write_object(pos)
+  logger.write_string(", ")
+  logger.write_object(msg)
+  logger.write_char(')')
+}
 
 ///|
 impl Default for Ctx with default() {

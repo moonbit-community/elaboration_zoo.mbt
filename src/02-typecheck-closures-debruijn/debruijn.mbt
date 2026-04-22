@@ -1,5 +1,5 @@
 ///|
-struct Ix(Int) derive(Show, Eq)
+struct Ix(Int) derive(Eq)
 
 ///|
 impl Add for Ix with add(self, other) = "%i32_add"
@@ -11,7 +11,14 @@ impl Sub for Ix with sub(self, other) = "%i32_sub"
 fn Ix::to_int(self : Ix) -> Int = "%identity"
 
 ///|
-struct Lvl(Int) derive(Show, Eq)
+impl Show for Ix with output(self, logger) {
+  logger.write_string("Ix(")
+  logger.write_object(self.to_int())
+  logger.write_char(')')
+}
+
+///|
+struct Lvl(Int) derive(Eq)
 
 ///|
 impl Add for Lvl with add(self, other) = "%i32_add"
@@ -35,3 +42,10 @@ fn lvl_to_ix(lvl : Lvl, len : Lvl) -> Ix {
 
 ///|
 fn Lvl::to_int(self : Lvl) -> Int = "%identity"
+
+///|
+impl Show for Lvl with output(self, logger) {
+  logger.write_string("Lvl(")
+  logger.write_object(self.to_int())
+  logger.write_char(')')
+}
