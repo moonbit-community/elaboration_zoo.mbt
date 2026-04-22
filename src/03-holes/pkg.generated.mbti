@@ -9,34 +9,30 @@ type ElabError
 type Error_
 
 type UnifyError
-impl Show for UnifyError
+pub impl Show for UnifyError
 
 // Types and methods
 type BD
-impl Show for BD
+pub impl Show for BD
 
 type Closure
 
 type Ctx
 
-type Ix
-impl Eq for Ix
-impl Show for Ix
+type Ix derive(Eq)
+pub impl Show for Ix
 
-type Lvl
-impl Eq for Lvl
-impl Show for Lvl
+type Lvl derive(Eq)
+pub impl Show for Lvl
 
 type MetaEntry
-impl Show for MetaEntry
+pub impl Show for MetaEntry
 
-pub(all) struct MetaVar(Int)
-fn MetaVar::inner(Self) -> Int
-impl Eq for MetaVar
-impl Show for MetaVar
+pub(all) struct MetaVar(Int) derive(Eq)
+pub impl Show for MetaVar
 
 type PartialRenaming
-impl Show for PartialRenaming
+pub impl Show for PartialRenaming
 
 type Raw
 
