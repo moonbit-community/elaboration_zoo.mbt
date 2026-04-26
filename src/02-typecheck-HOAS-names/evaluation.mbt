@@ -1,12 +1,14 @@
 ///|
 fn fresh(ns : Env, x : Name) -> Name {
-  loop x {
-    "_" => "_"
-    _ as x =>
-      match ns.lookup(x) {
-        None => x
-        Some(_) => continue x + "'"
-      }
+  for x = x {
+    match x {
+      "_" => break "_"
+      _ =>
+        match ns.lookup(x) {
+          None => break x
+          Some(_) => continue x + "'"
+        }
+    }
   }
 }
 

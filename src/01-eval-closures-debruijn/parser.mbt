@@ -1,5 +1,5 @@
 ///|
-typealias @parserc.(Input, ParseError, Parser, SourcePos)
+using @parserc {type Input, type ParseError, type Parser, type SourcePos}
 
 ///|
 let space = @parserc.space
@@ -17,7 +17,7 @@ let alphabetic = @parserc.alphabetic
 let spaces = @parserc.spaces
 
 ///|
-fnalias @parserc.(
+using @parserc {
   between,
   bind,
   char,
@@ -43,11 +43,13 @@ fnalias @parserc.(
   many,
   many_each,
   map_srcpos,
-  or
-)
+  or,
+}
 
 ///|
-fnalias Input::new as input
+fn input(s : String) -> Input {
+  Input::new(s)
+}
 
 ///|
 let parser : Parser[Tm] = {
@@ -60,15 +62,15 @@ let parser : Parser[Tm] = {
       res
     })
     .label("debruijn")
-  let index : Parser[Ix] = fn(input) {
+  let index : Parser[Ix] = fn(input) raise ParseError {
     let { row, col, .. } = input
     let (x, rest) = index(input)
-    let ix = try @strconv.parse_int(x) |> Ix catch {
+    let ix = try @string.parse_int(x) |> Ix catch {
       _ => raise ParseError::expect(row~, col~, "valid debruijn index")
     }
     (ix, rest)
   }
-  let var_ = index.map(Var(_))
+  let var_ = index.map(x => Var(x))
   letrec lam = fn(input : Input) -> (Tm, Input) raise ParseError {
     let fun = symbol("\\") | symbol("λ")
     let t = discard_spaces(expr)
@@ -89,7 +91,7 @@ let parser : Parser[Tm] = {
     .discard_spaces()
     .foldl1(pure_pos(pos => (t, u) => SrcPos(pos, App(t, u))))
     .label("expr")
-    .map_srcpos(SrcPos(_, _))(input)
+    .map_srcpos((pos, t) => SrcPos(pos, t))(input)
   }
 
   (expr : Parser[Tm]).discard_right(spaces).discard_right(eof(' '))

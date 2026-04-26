@@ -1,9 +1,11 @@
 ///|
 fn fresh(ns : @list.List[Name], x : Name) -> Name {
-  loop x {
-    "_" => "_"
-    _ as x if ns.contains(x) => continue x + "'"
-    _ as x => x
+  for x = x {
+    match x {
+      "_" => break "_"
+      _ if ns.contains(x) => continue x + "'"
+      _ => break x
+    }
   }
 }
 

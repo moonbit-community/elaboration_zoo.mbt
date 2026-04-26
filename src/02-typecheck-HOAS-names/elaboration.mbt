@@ -1,5 +1,15 @@
 ///|
-suberror TypeError String derive(Show)
+suberror TypeError {
+  TypeError(String)
+}
+
+///|
+pub impl Show for TypeError with output(self, logger) {
+  let TypeError(msg) = self
+  logger.write_string("TypeError(")
+  logger.write_object(msg)
+  logger.write_char(')')
+}
 
 ///|
 fn[A] report(x : String) -> A raise TypeError {
@@ -28,7 +38,7 @@ fn check(t : Raw, a : VTy, env~ : Env, ctx~ : Ctx) -> Unit raise TypeError {
     }
     _ => {
       let tty = infer(t, env~, ctx~)
-      if not(conv(env, tty, a)) {
+      if !conv(env, tty, a) {
         report(
           (
             $| type mismatch 
@@ -104,12 +114,12 @@ fn conv(env : Env, t : Val, u : Val) -> Bool {
     (VPi(x, a, b), VPi(x_, a_, b_)) => {
       let x = fresh(env, x)
       conv(env, a, a_) &&
-      {
+      ({
         let env = List::cons((x, VVar(x)), env)
         let b = b(VVar(x))
         let b_ = b_(VVar(x))
         conv(env, b, b_)
-      }
+      })
     }
     (VLam(x, t), VLam(x_, t_)) => {
       let x = fresh(env, x)

@@ -1,26 +1,53 @@
 ///|
-typealias @list.List
+type List[A] = @list.List[A]
 
 ///|
-fnalias @list.(construct as cons, empty as nil)
+fn[A] nil() -> List[A] {
+  @list.empty()
+}
+
+///|
+fn[A] cons(x : A, xs : List[A]) -> List[A] {
+  @list.cons(x, xs)
+}
 
 ///|
 enum MetaEntry {
   Solved(Val)
   Unsolved
-} derive(Show)
+}
 
 ///|
-typealias Tm as Ty
+pub impl Show for MetaEntry with output(self, logger) {
+  match self {
+    Solved(v) => {
+      logger.write_string("Solved(")
+      logger.write_object(v)
+      logger.write_char(')')
+    }
+    Unsolved => logger.write_string("Unsolved")
+  }
+}
 
 ///|
-typealias String as Name
+type Ty = Tm
+
+///|
+type Name = String
 
 ///|
 enum BD {
   Bound
   Defined
-} derive(Show)
+}
+
+///|
+pub impl Show for BD with output(self, logger) {
+  match self {
+    Bound => logger.write_string("Bound")
+    Defined => logger.write_string("Defined")
+  }
+}
 
 ///|
 enum Tm {
@@ -36,10 +63,10 @@ enum Tm {
 }
 
 ///|
-typealias @list.List[Val] as Spine
+type Spine = @list.List[Val]
 
 ///|
-typealias @list.List[Val] as Env
+type Env = @list.List[Val]
 
 ///|
 enum Closure {
@@ -47,7 +74,7 @@ enum Closure {
 }
 
 ///|
-typealias Val as Vty
+type Vty = Val
 
 ///|
 enum Val {
@@ -59,10 +86,10 @@ enum Val {
 }
 
 ///|
-typealias Val as VTy
+type VTy = Val
 
 ///|
-typealias @moonbitlang/core/list.List[(String, VTy)] as Types
+type Types = @list.List[(String, VTy)]
 
 ///|
 struct Ctx {
@@ -74,7 +101,17 @@ struct Ctx {
 }
 
 ///|
-suberror UnifyError String derive(Show)
+suberror UnifyError {
+  UnifyError(String)
+}
+
+///|
+pub impl Show for UnifyError with output(self, logger) {
+  let UnifyError(msg) = self
+  logger.write_string("UnifyError(")
+  logger.write_object(msg)
+  logger.write_char(')')
+}
 
 ///|
 suberror ElabError {

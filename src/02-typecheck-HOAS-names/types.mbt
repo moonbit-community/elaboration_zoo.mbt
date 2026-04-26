@@ -1,11 +1,11 @@
 ///|
-typealias String as Name
+type Name = String
 
 ///|
-typealias Tm as Ty
+type Ty = Tm
 
 ///|
-typealias Tm as Raw
+type Raw = Tm
 
 ///|
 enum Tm {
@@ -19,7 +19,7 @@ enum Tm {
 }
 
 ///|
-typealias (Val) -> Val as Closure
+type Closure = (Val) -> Val
 
 ///|
 enum Val {
@@ -31,16 +31,23 @@ enum Val {
 }
 
 ///|
-typealias @moonbitlang/core/list.List
+type List[A] = @list.List[A]
 
 ///|
-typealias @list.List[(Name, Val)] as Env
+type Env = @list.List[(Name, Val)]
 
 ///|
-typealias Val as VTy
+type VTy = Val
 
 ///|
-typealias @list.List[(Name, VTy)] as Ctx
+type Ctx = @list.List[(Name, VTy)]
 
 ///|
-fnalias @list.(construct as cons, empty as nil)
+fn[A] nil() -> List[A] {
+  @list.empty()
+}
+
+///|
+fn[A] cons(x : A, xs : List[A]) -> List[A] {
+  @list.cons(x, xs)
+}

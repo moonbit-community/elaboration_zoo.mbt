@@ -1,11 +1,18 @@
 ///|
-typealias String as Name
+type Name = String
 
 ///|
-typealias @moonbitlang/core/list.List
+type List[A] = @list.List[A]
 
 ///|
-fnalias @list.(construct as cons, empty as nil)
+fn[A] nil() -> List[A] {
+  @list.empty()
+}
+
+///|
+fn[A] cons(x : A, xs : List[A]) -> List[A] {
+  @list.cons(x, xs)
+}
 
 ///|
 enum Tm {
@@ -21,7 +28,7 @@ enum Tm {
 }
 
 ///|
-typealias @list.List[(Name, Val)] as Env
+type Env = @list.List[(Name, Val)]
 
 ///|
 enum Val {

@@ -1,5 +1,5 @@
 ///|
-typealias @parserc.(Input, ParseError, Parser, SourcePos)
+using @parserc {type Input, type ParseError, type Parser, type SourcePos}
 
 ///|
 let space = @parserc.space
@@ -17,7 +17,7 @@ let alphabetic = @parserc.alphabetic
 let spaces = @parserc.spaces
 
 ///|
-fnalias @parserc.(
+using @parserc {
   between,
   char,
   discard_left,
@@ -42,14 +42,16 @@ fnalias @parserc.(
   many,
   many_each,
   map_srcpos,
-  or
-)
+  or,
+}
 
 ///|
-fnalias Input::new as input
+fn input(s : String) -> Input {
+  Input::new(s)
+}
 
 ///|
-let reserved_words : Set[String] = Set::of(["let", "fun", "U"])
+let reserved_words : Set[String] = Set::from_array(["let", "fun", "U"])
 
 ///|
 let parser : Parser[Raw] = {
@@ -64,15 +66,15 @@ let parser : Parser[Raw] = {
     .discard_spaces()
     .label("name")
   let univ = symbol("U").discard_left(pure(RU))
-  let name : Parser[String] = fn(input) {
+  let name : Parser[String] = fn(input) raise ParseError {
     let { row, col, .. } = input
     let (x, rest) = name(input)
-    guard not(reserved_words.contains(x)) else {
+    guard !reserved_words.contains(x) else {
       raise ParseError::expect(row~, col~, "valid identifiers")
     }
     (x, rest)
   }
-  let var_ = name.map(RVar(_))
+  let var_ = name.map(x => RVar(x))
   letrec lam = fn(input : Input) -> (Raw, Input) raise ParseError {
     let parser = symbol("fun")
       .discard_left(
@@ -123,7 +125,7 @@ let parser : Parser[Raw] = {
       )
       .label("arrow type")
     let nlr : Parser[Raw] = (univ | lam | let_ | pi | var_ | round_bracket(expr)).discard_spaces()
-      |> map_srcpos(RSrcPos(_, _))
+      |> map_srcpos((pos, t) => RSrcPos(pos, t))
     let parser = nlr.foldl1(apply).foldr1(arrow)
     parser(input)
   }

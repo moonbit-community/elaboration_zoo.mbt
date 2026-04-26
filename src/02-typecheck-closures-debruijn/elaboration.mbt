@@ -50,7 +50,7 @@ fn check(raw : Raw, a : VTy, ctx~ : Ctx) -> Tm raise TypeError {
     }
     _ => {
       let (t, tty) = infer(raw, ctx~)
-      if not(conv(ctx.lvl, tty, a)) {
+      if !conv(ctx.lvl, tty, a) {
         report(
           ctx.pos,
           (
@@ -111,14 +111,16 @@ fn infer(raw : Raw, ctx~ : Ctx) -> (Tm, VTy) raise TypeError {
     }
     RLam(_) => report(ctx.pos, "Can't infer type for lambda expression")
     RVar(x) =>
-      loop (0, ctx.types) {
-        (i, Empty) => report(ctx.pos, "variable out of scope: \{x}")
-        (i, More((x_, a), tail=tys)) =>
-          if x == x_ {
-            (Var(Ix(i)), a)
-          } else {
-            continue (i + 1, tys)
-          }
+      for i = 0, tys = ctx.types {
+        match tys {
+          Empty => report(ctx.pos, "variable out of scope: \{x}")
+          More((x_, a), tail=tys) =>
+            if x == x_ {
+              break (Var(Ix(i)), a)
+            } else {
+              continue i + 1, tys
+            }
+        }
       }
     RU => (U, VU)
     RSrcPos(pos, t) => infer(t, ctx={ ..ctx, pos, })

@@ -5,20 +5,18 @@ package "illusory0x0/elaboration_zoo/02-typecheck-closures-debruijn"
 
 // Errors
 type TypeError
-impl Show for TypeError
+pub impl Show for TypeError
 
 // Types and methods
 type Closure
 
 type Ctx
 
-type Ix
-impl Eq for Ix
-impl Show for Ix
+type Ix derive(Eq)
+pub impl Show for Ix
 
-type Lvl
-impl Eq for Lvl
-impl Show for Lvl
+type Lvl derive(Eq)
+pub impl Show for Lvl
 
 type Raw
 

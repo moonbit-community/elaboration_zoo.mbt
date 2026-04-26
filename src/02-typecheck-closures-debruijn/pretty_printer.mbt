@@ -29,13 +29,15 @@ impl Show for Tm with output(self, logger) {
       Lam(x, t) => {
         logger.write_string("fun ")
         logger.write_string(x)
-        let (t, ns) = loop (t, @list.cons(x, ns)) {
-          (Lam(x, t), ns) => {
-            logger.write_string(" ")
-            logger.write_string(x)
-            continue (t, @list.cons(x, ns))
+        let (t, ns) = for t = t, ns = @list.cons(x, ns) {
+          match t {
+            Lam(x, t) => {
+              logger.write_string(" ")
+              logger.write_string(x)
+              continue t, @list.cons(x, ns)
+            }
+            _ => break (t, ns)
           }
-          end => end
         }
         logger.write_string(" -> ")
         dfs(t, ns)
@@ -91,13 +93,15 @@ impl Show for Raw with output(self, logger) {
       RLam(x, t) => {
         logger.write_string("fun ")
         logger.write_string(x)
-        let t = loop t {
-          RLam(x, t) => {
-            logger.write_string(" ")
-            logger.write_string(x)
-            continue t
+        let t = for t = t {
+          match t {
+            RLam(x, t) => {
+              logger.write_string(" ")
+              logger.write_string(x)
+              continue t
+            }
+            _ => break t
           }
-          t => t
         }
         logger.write_string(" -> ")
         dfs(t)

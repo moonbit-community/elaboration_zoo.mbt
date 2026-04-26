@@ -5,7 +5,7 @@ package "illusory0x0/elaboration_zoo/02-typecheck-HOAS-names"
 
 // Errors
 type TypeError
-impl Show for TypeError
+pub impl Show for TypeError
 
 // Types and methods
 type Tm

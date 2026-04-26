@@ -62,7 +62,19 @@ struct PartialRenaming {
   ren : @immut/sorted_map.SortedMap[Int, Lvl]
   // mapping from Delta to Gamma
   // TODO use Array
-} derive(Show)
+}
+
+///|
+pub impl Show for PartialRenaming with output(self, logger) {
+  let { dom, cod, ren } = self
+  logger.write_string("{dom: ")
+  logger.write_object(dom)
+  logger.write_string(", cod: ")
+  logger.write_object(cod)
+  logger.write_string(", ren: ")
+  logger.write_object(ren)
+  logger.write_char('}')
+}
 
 ///|
 fn PartialRenaming::lift(self : PartialRenaming) -> PartialRenaming {
@@ -92,8 +104,7 @@ fn invert(gamma : Lvl, sp : Spine) -> PartialRenaming raise {
       More(t, tail=sp) => {
         let (dom, ren) = go(sp)
         match force(t) {
-          VRigid(Lvl(x), _) if not(ren.contains(x)) =>
-            (dom + 1, ren.add(x, dom))
+          VRigid(Lvl(x), _) if !ren.contains(x) => (dom + 1, ren.add(x, dom))
           _ => raise UnifyError("spine has non variables")
         }
       }
@@ -269,11 +280,13 @@ fn infer(t : Raw, ctx~ : Ctx) -> (Tm, Vty) raise {
   match t {
     RSrcPos(pos, t) => infer(t, ctx={ ..ctx, pos, })
     RVar(x) =>
-      loop (Ix(0), ctx.types) {
-        (Ix(idx), Empty) => raise NameNotInScope(x, ctx.types.map(x => x.0))
-        (Ix(idx), More((x_, a), tail=types)) => {
-          guard x != x_ else { (Var(idx), a) }
-          continue (Ix(idx + 1), types)
+      for ix = Ix(0), types = ctx.types {
+        match (ix, types) {
+          (Ix(idx), Empty) => raise NameNotInScope(x, ctx.types.map(x => x.0))
+          (Ix(idx), More((x_, a), tail=types)) => {
+            guard x != x_ else { break (Var(idx), a) }
+            continue Ix(idx + 1), types
+          }
         }
       }
     RLam(x, t) => {
